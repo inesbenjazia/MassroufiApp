@@ -1,35 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image,TextInput, TouchableOpacity,ImageBackground, StyleSheet, Button, SafeAreaView, ScrollView } from 'react-native';
 import { RadioButton } from 'react-native-paper'; 
+import { categories } from './api';
 
 export default function ExpenceForm(){
     const [amount, setAmount] = useState('');
     const [type, setType] = useState(selectedCategory);
+    const [categoriesList, setCategoriesList] = useState([])
+    const fetchCategories = async() => {
+      try {
+        const {data} = await categories.getAll();
+        setCategoriesList(data)
+      } catch (error) {
+        
+      }
+    }
+    useEffect(()=> {
+      fetchCategories()
+    }, [])
     const [selectedCategory, setSelectedCategory] = useState('loisir');
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
         
-        
-    
-        // Mettez en place la logique pour ajuster le montant en fonction de la catégorie choisie
-        switch (category) {
-          case 'nutrition':
-            setAmount(/* Montant pour la catégorie 'nutrition' */);
-            break;
-          case 'éducation':
-            setAmount(/* Montant pour la catégorie 'éducation' */);
-            break;
-          case 'loisir':
-            setAmount(/* Montant pour la catégorie 'loisir' */);
-            break;
-          case 'loyer':
-            setAmount(/* Montant pour la catégorie 'loyer' */);
-            break;
-            case 'Autre':
-            setAmount(/* Montant pour la catégorie 'Autre' */);
-          default:
-            setAmount(0);
-        }
       };
       console.log('Type:',  selectedCategory);
 
@@ -53,29 +45,19 @@ export default function ExpenceForm(){
          />
 
        <View style={styles.container}>
-        <Text style={styles.catTgext}>{`Catégorie sélectionnée: ${selectedCategory}`}</Text>
+        {/* <Text style={styles.catTgext}>{`Catégorie sélectionnée: ${selectedCategory}`}</Text> */}
 
         <RadioButton.Group onValueChange={handleCategoryChange} value={selectedCategory}>
-          <View style={styles.radioButtonContainer}>
-            <Text style={styles.catTgext}>Nutrition</Text>
-            <RadioButton value="nutrition" />
-          </View>
-          <View style={styles.radioButtonContainer}>
-            <Text style={styles.catTgext}>Éducation</Text>
-            <RadioButton value="éducation" />
-          </View>
-          <View style={styles.radioButtonContainer}>
-            <Text style={styles.catTgext}>Loisir</Text>
-            <RadioButton value="loisir" />
-          </View>
-          <View style={styles.radioButtonContainer}>
-            <Text style={styles.catTgext}>Loyer</Text>
-            <RadioButton value="loyer" />
-          </View>
-          <View style={styles.radioButtonContainer}>
-            <Text style={styles.catTgext}>Autre</Text>
-            <RadioButton value="Autre" />
-          </View>
+        {(categoriesList&&categoriesList.length!== 0) && 
+        categoriesList?.map((item)=>  
+         {
+          console.log(item);
+          return <View style={styles.radioButtonContainer}>
+          <Text style={styles.catTgext}>{item.name}</Text>
+          <RadioButton value={item.name} />
+        </View>
+         }
+          )}
         </RadioButton.Group>
 
         

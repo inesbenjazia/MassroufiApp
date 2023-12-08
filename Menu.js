@@ -5,10 +5,14 @@ import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Menu(){
     const navigation = useNavigation();
-
+const handleLogout = () =>{
+    AsyncStorage.clear()
+    navigation.navigate('Login')
+}
     return(
 
         <SafeAreaView>
@@ -41,7 +45,7 @@ export default function Menu(){
           Add Expense
      </Text>
  </TouchableOpacity>
- <TouchableOpacity onPress={()=> navigation.navigate('Login')} style={styles.addBtn} >
+ <TouchableOpacity onPress={()=> handleLogout()} style={styles.addBtn} >
  <MaterialIcons name="logout" size={24} color="black" style={{margin:"5%"}}/>
      
      <Text style={{marginTop: 1, fontSize: 25 }}>

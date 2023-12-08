@@ -4,7 +4,9 @@ import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
+import {user, api} from './api'
 import { FontAwesome5 } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Transactions from './Transactions';
 
 import UserProfil from './UserProfil';
@@ -14,7 +16,24 @@ import CustomPieChart from './CustomPieChart';
 
 export default function Accueil(){
     const navigation = useNavigation();
+    const [connectedUser, setConnectedUser] = useState({})
+    const checkIfUserAlreadyLogged = async()=>{
+        const isLogged = await AsyncStorage.getItem("yourAuthTokenKey")
+        (!isLogged)&& navigation.navigate("Login")
+        console.log(isLogged)
 
+      }
+    const fetchProfile = async() => {
+        checkIfUserAlreadyLogged()
+        const {data} = await user.profile();
+        setConnectedUser(data)
+    }
+    useEffect(()=>{
+        
+        fetchProfile();
+
+        // isLogged &&   navigation.navigate("Login")
+    }, [])
     return(
 
     
@@ -26,7 +45,7 @@ export default function Accueil(){
                 </View>
                 <View style={styles.nameContainer}>
                     <Text  style={styles.welcome}> Welcome </Text>
-                    <Text  style={styles.name}> User Name</Text>
+                    <Text  style={styles.name}> {connectedUser?.username}</Text>
                 </View>
         </View>
 

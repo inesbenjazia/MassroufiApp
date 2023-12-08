@@ -14,6 +14,10 @@ import { useNavigation } from '@react-navigation/native';
 export default function SignIn() {
   const navigation=useNavigation();
 
+  const handleLogin = () => {
+    // navigation.navigate("Home")
+    alert("heyy")
+  }
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
@@ -44,7 +48,7 @@ export default function SignIn() {
       <TouchableOpacity onPress={() =>navigation.navigate("signUp")}>
         <Text style={styles.forgot_button}>Créer votre compte</Text> 
       </TouchableOpacity> 
-      <TouchableOpacity style={styles.loginBtn} onPress={() =>navigation.navigate("Home")}  >
+      <TouchableOpacity style={styles.loginBtn} onPress={() =>handleLogin()}  >
       
         <Text style={styles.loginText}>LOGIN</Text> 
       </TouchableOpacity> 

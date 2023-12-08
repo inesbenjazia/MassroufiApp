@@ -1,15 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text,SafeAreaView, TextInput, TouchableOpacity,ImageBackground, StyleSheet, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {MaterialCommunityIcons, Ionicons} from '@expo/vector-icons';
+import {user, api} from './api'
 
 export default function Register(){
     const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const handleRegister = async() => {
+    console.log(username, email, password)
+    try {
+        await user.signup(username, password, email)
+        navigation.navigate("Login")
+    } catch (error) {
+        console.log(error)
+        alert(error)
+    }
+    
+  }
+  const checkIfUserAlreadyLogged = async()=>{
+    const isLogged = await AsyncStorage.getItem("yourAuthTokenKey")
+    if(isLogged){
+        navigation.navigate("Accueil")
+    }  
+  }
+  useEffect(()=>{
+    checkIfUserAlreadyLogged()
+  },[])
     return(
         //"#F8F8F8"
        
@@ -99,7 +119,7 @@ export default function Register(){
     </View>
 
     <View style={{marginLeft: 100, marginRight: 100,marginTop: 30,marginBottom: 40}}>
-    <TouchableOpacity  onPress={() =>navigation.navigate("Login")}>
+    <TouchableOpacity  onPress={() =>handleRegister()}>
     <ImageBackground
               source={require("./assets/yosrBg.png")}  
               style={styles.addButtonBackground}
